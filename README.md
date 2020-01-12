@@ -1,0 +1,2 @@
+# tipbot
+protips for pros
