@@ -1,0 +1,179 @@
+
+<html>
+<head>
+<title>Home Screen Tips</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="ROBOTS" CONTENT="NOINDEX, FOLLOW">
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans:bold' rel='stylesheet' type='text/css'>
+<style>
+body, textarea {
+	margin: 0;
+	font-family: "Droid Sans", sans-serif;
+	font-size: 20px;
+}
+#all {
+	position: absolute;
+	height: 173px;
+	width: 100%;
+	margin-top: -86px;
+	top: 50%;
+	padding: 0;
+}
+#bubble {
+	color: white;
+	background: url("screenshot.png");
+	width: 492px;
+	height: 173px;
+	margin: 0 auto;
+}
+#bubble>* {
+	position: relative;
+	left: 38px;
+	top: 32px;
+	width: 320px;
+	height: 102px;
+	overflow: hidden;
+}
+#bubble h1 {
+	font-size: 100%;
+	margin: 0;
+	margin-bottom: 6px;
+}
+#bubble p {
+	margin: 0;
+}
+#bubble a {
+	color: white;
+}
+#footer {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	background-color: #888;
+	font-size: 80%;
+	margin: 0;
+	padding: 4px;
+	list-style-type: none;
+}
+#footer li {
+	display: inline;
+	padding: 4px 8px;
+	margin: 0;
+}
+#footer li+li {
+}
+#footer a {
+	color: #eee;
+	text-decoration: none;
+}
+#permalink {
+	font-weight: bold;
+}
+</style>
+<script language="JavaScript">
+// see https://android.googlesource.com/platform/packages/apps/Protips/+/97994f1b9bc9cb6cbf2fa303ea21f39351de1342#
+var HAIKUS = [
+  "Home is a garden\nTouch &amp; hold an empty spot\nTo grow new icons",
+  "Phone isn’t waterproof\nDo not immerse in water\nor other fluids",
+  "Want some more home screens?\nSwipe left and right to find them\n(No theft required)",
+  "Little Home screen dots\nWhat could they possibly do?\nTouch &amp; hold to learn.",
+  "Status bar icons\nTo discover their secrets\nPull the windowshade",
+  "There is a trick to\nDragging items twixt Home screens\nPause at the edges",
+  "Touch Market for apps\nLike a box of chocolates\nEach one a surprise",
+  "Oh, and by the way—\nCeci n’est pas une trombone\nI am an Android",
+];
+function any(a) {
+	return a[Math.floor(Math.random()*a.length-0.001)];
+}
+function golink() {
+	return "?q=" + escape(window.rawquery);
+}
+function makegolink() {
+	document.location = 
+	'https://goto.google.com/admin.py?hash=True&main=True&action=EDIT&url='
+		+ escape(golink());
+}
+function showTip(q) {
+	if (q.match(/<(embed|object|frame|iframe|script)/i)
+		|| q.match(/<[^>]*javascript:/i)
+		|| q.match(/<[^>]*on(click|mouse|focus|blur)/i)) {
+		q = "Really?"
+	}
+	var lines = q.split(NEWLINES);
+
+	var x = lines.join("\n");
+	document.getElementById("edit").value = x;
+	window.rawquery=x;
+
+	var title = lines.shift();
+	var text = lines.join("<br/>");
+	var t = document.getElementById("title");
+	if (t != null) t.innerHTML = title;
+	t = document.getElementById("text");
+	if (t != null) t.innerHTML = text;
+
+	var p = document.getElementById("permalink");
+	var u = golink();
+	p.href = u;
+}
+function swap() {
+	var edit = document.getElementById("edit");
+	var body = document.getElementById("body");
+	if (edit.style.display == 'none') {
+		edit.style.display = 'block';
+		body.style.display = 'none';
+		edit.focus();
+	} else {
+		edit.style.display = 'none';
+		body.style.display = 'block';
+		showTip(unescape(edit.value));
+	}
+}
+
+var NEWLINES = / *[\r\n] */m;
+var QUERY = /\?q=(.*)/m;
+function load() {
+	var q = "Protips.\nUsage: tipbot.html?q=TEXT.\nOr click to edit.";
+	window.rawquery = "";
+	var href = document.location.href;
+	var m = href.match(QUERY);
+	if (m && m[1]) {
+		q = unescape(m[1]);
+		window.rawquery = q;
+	    if (q == "haiku") {
+			q = any(HAIKUS);
+		}
+	}
+	showTip(q);
+}
+</script>
+</head>
+<body onLoad="load();">
+<div id="all">
+	<div id="bubble">
+		<div id="body" onClick="swap();">
+			<h1 id="title">Show me your tips.</h1>
+			<p id="text"></p>
+		</div>
+		<textarea id="edit" style="display:none;" onBlur="swap();">
+Show me your tips.
+		</textarea>
+	</div>
+</div>
+<ul id="footer">
+<li><a id="permalink" href="#" title="xss your friends">permalink</a></li>
+<!--<li><a id="golink" href="javascript:makegolink()" title="make short goto
+	link">go</a></li>-->
+<li><a id="blame"
+	href="https://twitter.com/dsandler"
+	title="please leave your complaints in the form of a github comment">blame</a></li>
+<li><a id="haikulink" href="?q=haiku"
+	title="
+	hard to remember
+	this was something we once did
+	in our salad days
+	">?</a></li>
+</ul>
+</body>
+</html>
